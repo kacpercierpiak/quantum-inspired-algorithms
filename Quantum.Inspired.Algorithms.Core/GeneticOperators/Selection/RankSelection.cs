@@ -25,28 +25,29 @@ namespace Quantum.Inspired.Algorithms.Core.GeneticOperators.Selection
 
         public void Fitness(Population population)
         {
-            population.Individuals.ForEach(x => x.Score = _fitness.Fitness(x));
-            population.Individuals = population.Individuals.OrderBy(x => x.Score = _fitness.Fitness(x)).ToList();            
+            
+            population.Individuals.ForEach(x => x.SetScore(_fitness.Fitness(x)));
+            population.Individuals = population.Individuals.OrderBy(x => x.GetScore()).ToList();            
 
             for (int i = 0; i < population.Individuals.Count; i++)
             {
-                population.Individuals[i].PI = CountPi(i, population.Individuals.Count);              
+                population.Individuals[i].SetPi(CountPi(i, population.Individuals.Count));              
             }
         }
-        public void OperateOnPopulation(Population population)
+        public void OperateOnPopulation(Population population, int outputSize)
         {
-            Fitness(population);          
-           
+            Fitness(population);            
+
             List<int> wheel = new List<int>();            
 
             for(int i = 0; i < population.Individuals.Count; i++)
             {                
-                wheel.AddRange(Enumerable.Repeat(i, (int)(population.Individuals[i].PI*100)));
+                wheel.AddRange(Enumerable.Repeat(i, (int)(population.Individuals[i].GetPi()*100)));
             }
 
             var resultPopulation = new List<Genotype>();
 
-            for (int i = 0; i < population.Individuals.Count; i++)
+            for (int i = 0; i < outputSize; i++)
             {
                 Random random = new Random();
                 var id = random.Next(0, wheel.Count);
@@ -55,6 +56,12 @@ namespace Quantum.Inspired.Algorithms.Core.GeneticOperators.Selection
             }
 
             population.Individuals = resultPopulation;
+        }
+
+        public void OperateOnPopulation(Population population)
+        {
+            var outputSize = population.Individuals.Count;
+            OperateOnPopulation(population, outputSize);
         }
     }
 }

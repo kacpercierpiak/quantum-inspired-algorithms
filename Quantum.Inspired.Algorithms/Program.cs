@@ -3,25 +3,38 @@ using Quantum.Inspired.Algorithms;
 using Quantum.Inspired.Algorithms.Core;
 using Quantum.Inspired.Algorithms.Core.Algorithms;
 
-
-
-
-for (int j = 0; j < 10; j++)
+var count = 0;
+var list = new List<int>();
+for (int j = 0; j < 1000; j++)
 {
-    Console.WriteLine("!!!!!!!!!!Hello, World!");
-    var Fitness = new Fit(-10.0, 10.0, 2);
-    var population = new GeneticAlgorithm(20, Fitness.m, Fitness);
-    Console.WriteLine(population.BestGlobalScore);
-    for (int i = 0; i < 40; i++)
+    //var Fitness = new Fit(-10.0, 10.0, 2); //min-> 0
+    //var Fitness = new HimmelblauFunc(-5.0, 5.0, 2); //min-> 0
+    // var Fitness = new EasomFunc(-20.0, 20.0, 2); //min-> -1
+    var Fitness = new SchafferFunc(-100.0, 100.0, 2); // min-> 0.30
+    var population = new QuantumGeneticAlgorithm(60, Fitness.m, Fitness
+        );
+    for (int i = 0; i < 200; i++)
     {
         population.CreateNewPopulation();
-        Console.WriteLine(i);
-        Console.WriteLine(population.Populations[i + 1].BestScore);
-        Console.WriteLine(population.BestGlobalScore);
-        if (population.BestGlobalScore <= 0.001)
+        if (population.BestGlobalScore <= 0.30)
+        {
+            count++;
+            list.Add(i);
+            
             break;
+        }
+            
     }
 }
+
+Console.WriteLine(count.ToString());
+if(count != 0)
+{
+    Console.WriteLine(list.Min());
+    Console.WriteLine(list.Max());
+    Console.WriteLine(list.Average());
+}
+
 
 
 

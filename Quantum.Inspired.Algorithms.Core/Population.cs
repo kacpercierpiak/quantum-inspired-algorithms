@@ -3,10 +3,10 @@ using System.Text;
 
 namespace Quantum.Inspired.Algorithms.Core
 {
-    public class Population
+    public class Population 
     {
         public List<Genotype> Individuals { get; set; } = new List<Genotype>();
-        public double BestScore => Individuals.Min(x => x.Score);
+        public double BestScore => Individuals.Min(x => x.GetScore());
 
         public Population(int populationSize, int chromosomeLenght)
         {

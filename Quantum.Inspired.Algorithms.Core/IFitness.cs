@@ -8,7 +8,7 @@ namespace Quantum.Inspired.Algorithms.Core
 {
     public interface IFitness
     {
-        public double Fitness(Genotype chromosome);
+        public double Fitness(IGenotype chromosome);
 
     }
 }

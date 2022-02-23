@@ -10,7 +10,7 @@ namespace Quantum.Inspired.Algorithms.Core.GeneticOperators.Mutation
     {
         private double _probability { get; set; } = 0.0;
 
-        public BitInversion(double probability = 0.01)
+        public BitInversion(double probability = 0.15)
         {
             if(probability < 0.0 || probability > 1.0)
                 throw new ArgumentOutOfRangeException(nameof(probability));

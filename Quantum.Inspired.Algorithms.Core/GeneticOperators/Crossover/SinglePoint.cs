@@ -8,9 +8,9 @@ namespace Quantum.Inspired.Algorithms.Core.GeneticOperators.Crossover
 {
     public class SinglePoint : IGeneticOperators
     {
-        private double _probability { get; set; } = 0.80;
+        private double _probability { get; set; } = 0.70;
 
-        public SinglePoint(double probability = 0.80)
+        public SinglePoint(double probability = 0.7)
         {
             if (probability < 0.0 || probability > 1.0)
                 throw new ArgumentOutOfRangeException(nameof(probability));
@@ -18,24 +18,37 @@ namespace Quantum.Inspired.Algorithms.Core.GeneticOperators.Crossover
         }
 
         public void OperateOnPopulation(Population population)
-        {            
+        {
             List<(int, int)> pairs = CreatePairs(population);
-            Evolve(population, pairs);                   
+            Evolve(population, pairs);
         }
+
+        public static (string Item1, string Item2) Cross(string item1Str, string item2Str)
+        {
+            Random random = new();
+            var crossOverPosition = random.Next(1, item1Str.Length);
+            var Item1 = item1Str.Remove(0, crossOverPosition).Insert(0, item2Str[..crossOverPosition]);
+            var Item2 =item2Str.Remove(0, crossOverPosition).Insert(0, item1Str[..crossOverPosition]);
+            return new(Item1, Item2);
+        }
+
 
         public static void Evolve(Population population, List<(int, int)> pairs)
         {
-            Random random = new();
+           
+            var chromosomeLenght = population.Individuals.First().Chromosome.Length;
             pairs.ForEach(pair =>
             {
-                var crossOverPosition = random.Next(1, population.Individuals.First().Chromosome.Length);
-                var tmpGene = population.Individuals[pair.Item1].Chromosome[..crossOverPosition];
-              
-                var replace = population.Individuals[pair.Item2].Chromosome[..crossOverPosition];
-                population.Individuals[pair.Item1].Chromosome =
-                population.Individuals[pair.Item1].Chromosome.Remove(0, crossOverPosition).Insert(0, replace);
-                population.Individuals[pair.Item2].Chromosome =
-                population.Individuals[pair.Item2].Chromosome.Remove(0, crossOverPosition).Insert(0, tmpGene);             
+                var item1Left = population.Individuals[pair.Item1].Chromosome.Substring(0, chromosomeLenght / 2);
+                var item1Right = population.Individuals[pair.Item2].Chromosome.Substring(chromosomeLenght / 2, chromosomeLenght / 2);
+
+                var item2Left = population.Individuals[pair.Item2].Chromosome.Substring(0, chromosomeLenght / 2);
+                var item2Right = population.Individuals[pair.Item2].Chromosome.Substring(chromosomeLenght / 2, chromosomeLenght / 2);
+
+                var leftResult = Cross(item1Left, item2Left);
+                var rightResult = Cross(item1Right, item2Right);
+                population.Individuals[pair.Item1].Chromosome = leftResult.Item1 + rightResult.Item1;
+                population.Individuals[pair.Item1].Chromosome = leftResult.Item1 + rightResult.Item2;
             });
         }
 

@@ -12,13 +12,15 @@ namespace Quantum.Inspired.Algorithms.Core
         {
             return new Population()
             {
-                Individuals = population.Individuals.Select(i => new Genotype()
-                {
-                    Chromosome = i.Chromosome.ToString(),
-                    PI = i.PI,
-                    Score = i.Score,
-                    StopValue = i.StopValue
-                }).ToList()
+                Individuals = population.Individuals.Select(i => i.Clone()).ToList()
+            };
+        }
+
+        public static QPopulation Clone(this QPopulation population)
+        {
+            return new QPopulation()
+            {
+                Individuals = population.Individuals.Select(i => i.Clone()).ToList()
             };
         }
     }

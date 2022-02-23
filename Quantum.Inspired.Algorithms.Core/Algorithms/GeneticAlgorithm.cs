@@ -33,7 +33,7 @@ namespace Quantum.Inspired.Algorithms.Core.Algorithms
         {            
             _populationSize = populationSize;
             _chromosomeLenght = chromosomeLenght;
-            Populations.Add(new Population(populationSize, chromosomeLenght));
+            Populations.Add(new Population(populationSize, chromosomeLenght*2));
             _fitness = fitness;
             _selection = selection ?? new RankSelection(_fitness);
             _selection.Fitness(Populations.First());
@@ -45,10 +45,12 @@ namespace Quantum.Inspired.Algorithms.Core.Algorithms
 
         public void CreateNewPopulation()
         {
-            var newPopulation = Populations.Last().Clone();
-            _selection.OperateOnPopulation(newPopulation);
+            var currentPopulation = Populations.Last().Clone();
+            var newPopulation = currentPopulation.Clone();
             _mutation.OperateOnPopulation(newPopulation);
             _crossover.OperateOnPopulation(newPopulation);
+            newPopulation.Individuals.AddRange(currentPopulation.Individuals);
+            _selection.OperateOnPopulation(newPopulation, _populationSize);
             Populations.Add(newPopulation);
             BestGlobalScore = Populations.Min(x => x.BestScore);
         }

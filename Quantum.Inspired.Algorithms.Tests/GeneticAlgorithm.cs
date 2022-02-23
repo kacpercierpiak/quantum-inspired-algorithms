@@ -4,7 +4,7 @@ using System;
 
 namespace Quantum.Inspired.Algorithms.Tests
 {
-    public class Tests
+    public class GeneticAlgorithmTests
     {
         [SetUp]
         public void Setup()

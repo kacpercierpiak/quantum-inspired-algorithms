@@ -6,25 +6,35 @@ using System.Threading.Tasks;
 
 namespace Quantum.Inspired.Algorithms.Core
 {
-    public class Genotype
+    public class Genotype : IGenotype
     {
         public string Chromosome { get; set; } = String.Empty;
-        public double Score { get; set; } = 0.0;
+        protected double _score { get; set; }
 
-        public double PI { get; set; } = 0.0;
-
-        public double StopValue { get; set; } = 0;
+        protected double _pi { get; set; }
 
         public Genotype Clone()
         {
-            return new Genotype()
+            return new Genotype(_score, _pi)
             {
-                Chromosome = (string)Chromosome.Clone(),
-                Score = Score,
-                PI = PI,
-                StopValue = StopValue
+                Chromosome = (string)Chromosome.Clone()         
             };
         }
 
+        public Genotype(double score = 0.0, double pi= 0.0)
+        {
+            _score = score;
+            _pi = pi;
+        }
+
+        public Genotype Observe() => this;
+
+        public double GetScore() => _score;
+
+        public double GetPi() => _pi;
+
+        public void SetScore(double value) => _score = value;
+
+        public void SetPi(double value) => _pi = value;
     }
 }
