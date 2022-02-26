@@ -27,16 +27,19 @@ namespace Quantum.Inspired.Algorithms.Core
             };
         }
 
-        public new void Observe()
+        public override Genotype Observe()
         {
+            
             var sb = new StringBuilder();
             Random random = new Random();
             Chromosome.Quantum.ForEach(x =>
             {
                 var alpha = Math.Cos(x);
-                sb.Append(random.NextDouble() <= (x*x) ? 0 : 1);
+                sb.Append(random.NextDouble() <= alpha * alpha ? 0 : 1);
             });
             Chromosome.Classical = sb.ToString();
+
+            return new Genotype(_score, _pi) { Chromosome = Chromosome.Classical };
         }
     }
 }

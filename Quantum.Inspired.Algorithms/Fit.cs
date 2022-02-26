@@ -1,9 +1,4 @@
 ﻿using Quantum.Inspired.Algorithms.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Quantum.Inspired.Algorithms
 {
@@ -34,7 +29,7 @@ namespace Quantum.Inspired.Algorithms
             return Function(x, y);
         }
 
-        protected static double Function(double x, double y)
+        protected virtual double Function(double x, double y)
         {
             return (0.26 * ((x * x) + (y * y))) - (0.48 * x * y);
         }

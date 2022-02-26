@@ -5,13 +5,13 @@ using Quantum.Inspired.Algorithms.Core.Algorithms;
 
 var count = 0;
 var list = new List<int>();
-for (int j = 0; j < 1000; j++)
+for (int j = 0; j < 100; j++)
 {
     //var Fitness = new Fit(-10.0, 10.0, 2); //min-> 0
-    //var Fitness = new HimmelblauFunc(-5.0, 5.0, 2); //min-> 0
-    // var Fitness = new EasomFunc(-20.0, 20.0, 2); //min-> -1
+    //var Fitness = new HimmelblauFunc(-5.0, 5.0, 2); //min-> 0.01
+    //var Fitness = new EasomFunc(-20.0, 20.0, 2); //min-> -0.99
     var Fitness = new SchafferFunc(-100.0, 100.0, 2); // min-> 0.30
-    var population = new QuantumGeneticAlgorithm(60, Fitness.m, Fitness
+    var population = new QuantumGeneticAlgorithm(80, Fitness.m, Fitness
         );
     for (int i = 0; i < 200; i++)
     {

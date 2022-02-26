@@ -12,7 +12,7 @@ namespace Quantum.Inspired.Algorithms.Core.Algorithms
         private int _populationSize { get; set; }
         private int _chromosomeLenght { get; set; }
         private IFitness _fitness { get; set; }
-        private Genotype bestResult { get; set; }
+        private QGenotype bestResult { get; set; }
         public List<QPopulation> Populations { get; private set; } = new List<QPopulation>();
 
         public double BestGlobalScore = 0.0;
@@ -22,10 +22,7 @@ namespace Quantum.Inspired.Algorithms.Core.Algorithms
         public QuantumGeneticAlgorithm(
             int populationSize,
             int chromosomeLenght,
-            IFitness fitness,
-            ISelection? selection = null,
-            IGeneticOperators? mutation = null,
-            IGeneticOperators? crossover = null)
+            IFitness fitness)
         {
             _populationSize = populationSize;
             _chromosomeLenght = chromosomeLenght;
@@ -33,9 +30,9 @@ namespace Quantum.Inspired.Algorithms.Core.Algorithms
 
             _fitness = fitness;
             Populations[0].ObservePopulation();
-            Populations[0].Individuals.ForEach(x => _fitness.Fitness(x));
+            Populations[0].Individuals.ForEach(x => x.SetScore(_fitness.Fitness(x)));
             bestResult = Populations[0].Individuals.OrderBy(x => x.GetScore()).First();
-      
+            
             BestGlobalScore = Populations.Min(x => x.BestScore);
         }
 
@@ -43,11 +40,8 @@ namespace Quantum.Inspired.Algorithms.Core.Algorithms
         public void CreateNewPopulation()
         {
             var currentPopulation = Populations.First().Clone();
-            currentPopulation.Individuals.ForEach(x=>_fitness.Fitness(x));
-            Update(currentPopulation);
-
-
-
+            currentPopulation.Individuals.ForEach(x=> x.SetScore(_fitness.Fitness(x)));
+            Update(currentPopulation);           
             bestResult = currentPopulation.Individuals.OrderBy(x => x.GetScore()).First();            
 
             Populations.Add(currentPopulation);
@@ -60,11 +54,12 @@ namespace Quantum.Inspired.Algorithms.Core.Algorithms
             {
                 var best = bestResult.GetScore();
                 var newIsbetter = individual.GetScore() >= best;
+                Random random = new Random();
                 
-                for (int j=0; j < individual.Chromosome.Classical.Length/2;j++)
+                for (int j=0; j < individual.Chromosome.Classical.Length;j++)
                 {
                     char x = individual.Chromosome.Classical[j];
-                    char b = bestResult.Chromosome[j];
+                    char b = bestResult.Chromosome.Classical[j];
                     var delta = lookup[x == '1' ? 1 : 0, b == '1' ? 1 : 0, newIsbetter ? 1 : 0];
                     double angle = individual.Chromosome.Quantum[j] % Math.PI;
                     int index = (angle > double.Epsilon) && angle < ((Math.PI/4) - double.Epsilon) ? 0 :
@@ -72,8 +67,11 @@ namespace Quantum.Inspired.Algorithms.Core.Algorithms
                        (Math.Abs(((Math.PI/2 + individual.Chromosome.Quantum[j]) % Math.PI) - Math.PI/2) < double.Epsilon) ? 2 : 3;
 
                     double sign = signs_table[x == '1' ? 1 : 0, b == '1' ? 1 : 0, newIsbetter ? 1 : 0, index];
-                    individual.Chromosome.Quantum[j] += sign * delta;
+                    individual.Chromosome.Quantum[j] += delta * sign * 8;
+                    
                 }
+                individual.SetScore(_fitness.Fitness(individual));
+
             }
             
         }
@@ -102,8 +100,8 @@ namespace Quantum.Inspired.Algorithms.Core.Algorithms
                         { 1 ,-1,0,1}
                     },
                     {
-                        {1 ,-1,0,1},
-                        { 1 ,-1,0,+1}
+                        { 1 ,-1,0,1},
+                        { 1 ,-1,0,1}
                     }
                 }
 };

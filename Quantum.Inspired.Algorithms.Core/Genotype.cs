@@ -27,7 +27,7 @@ namespace Quantum.Inspired.Algorithms.Core
             _pi = pi;
         }
 
-        public Genotype Observe() => this;
+        public virtual Genotype Observe() => this;
 
         public double GetScore() => _score;
 

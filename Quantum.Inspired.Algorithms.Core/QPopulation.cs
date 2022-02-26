@@ -34,7 +34,7 @@ namespace Quantum.Inspired.Algorithms.Core
         private static List<QGenotype> GenerateIndividuals(int populationSize, int chromosomeLenght)
         {
             return Enumerable.Range(0, populationSize)
-                .Select(x => new QGenotype() { Chromosome = new ChromosomeDto() { Quantum = GenerateChromosome(x) } }).ToList();
+                .Select(x => new QGenotype() { Chromosome = new ChromosomeDto() { Quantum = GenerateChromosome(chromosomeLenght) } }).ToList();
         }
 
         private static List<double> GenerateChromosome(int chromosomeLenght)

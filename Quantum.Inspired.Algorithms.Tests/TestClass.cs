@@ -53,5 +53,46 @@ namespace Quantum.Inspired.Algorithms.Tests
             var t =  new EasomFunc(-5.0, 5.0, 2);
             var result = t.Fitness(new Genotype() { Chromosome = "11010000011101000001" });
         }
+
+        [Test]
+        public void Test3()
+        {
+
+            var result1 = signs_table[0, 0, 0,0];
+            var result2 = signs_table[0, 0, 1,0];
+            var result3 = signs_table[0, 1, 0,0];
+            var result4 = signs_table[0, 1, 1,0];
+            var result5 = signs_table[1, 1, 0,2];
+        }
+
+        private readonly double[,,] lookup = new double[2, 2, 2]
+       {
+            {{1, 2}, {3, 4}},
+            {{5, 6}, {7, 8}}
+       };
+
+        private readonly double[,,,] signs_table = new double[2, 2, 2, 4]
+{
+            {
+                    {
+                        { 0 ,0,0,0},
+                        { 0 ,0,0,0}
+                    },
+                    {
+                        { 0 ,0,0,0},
+                        { -1 ,1,1,0}
+                    }
+                },
+                {
+                    {
+                        { 17 ,1,1,0},
+                        { 1 ,-1,0,1}
+                    },
+                    {
+                        { 1 ,-1,27,1},
+                        { 1 ,-1,0,1}
+                    }
+                }
+};
     }
 }
