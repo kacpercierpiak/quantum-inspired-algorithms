@@ -7,26 +7,30 @@ using System.Threading.Tasks;
 
 namespace Quantum.Inspired.Algorithms.Core.Algorithms
 {
-    public class QuantumGeneticAlgorithm
+    public class QuantumGeneticAlgorithm : IGeneticAlgorithm
     {
         private int _populationSize { get; set; }
         private int _chromosomeLenght { get; set; }
-        private IFitness _fitness { get; set; }
-        private QGenotype bestResult { get; set; }
+        private IFitness? _fitness { get; set; }
+        private QGenotype? bestResult { get; set; }
         public List<QPopulation> Populations { get; private set; } = new List<QPopulation>();
 
-        public double BestGlobalScore = 0.0;
+        private double BestGlobalScore = 0.0;
 
+        public double GetBestGlobalScore()
+        {
+            return BestGlobalScore;
+        }
 
-
-        public QuantumGeneticAlgorithm(
+        public void Init(
             int populationSize,
             int chromosomeLenght,
             IFitness fitness)
         {
             _populationSize = populationSize;
             _chromosomeLenght = chromosomeLenght;
-            Populations.Add(new QPopulation(populationSize, chromosomeLenght * 2));
+            Populations.Clear();
+            Populations.Add(new QPopulation(populationSize, chromosomeLenght));
 
             _fitness = fitness;
             Populations[0].ObservePopulation();
@@ -52,10 +56,9 @@ namespace Quantum.Inspired.Algorithms.Core.Algorithms
         {
             foreach (var individual in population.Individuals)
             {
-                var best = bestResult.GetScore();
+                var best = bestResult?.GetScore();
                 var newIsbetter = individual.GetScore() >= best;
-                Random random = new Random();
-                
+                               
                 for (int j=0; j < individual.Chromosome.Classical.Length;j++)
                 {
                     char x = individual.Chromosome.Classical[j];
@@ -67,7 +70,7 @@ namespace Quantum.Inspired.Algorithms.Core.Algorithms
                        (Math.Abs(((Math.PI/2 + individual.Chromosome.Quantum[j]) % Math.PI) - Math.PI/2) < double.Epsilon) ? 2 : 3;
 
                     double sign = signs_table[x == '1' ? 1 : 0, b == '1' ? 1 : 0, newIsbetter ? 1 : 0, index];
-                    individual.Chromosome.Quantum[j] += delta * sign * 8;
+                    individual.Chromosome.Quantum[j] += delta * sign;
                     
                 }
                 individual.SetScore(_fitness.Fitness(individual));

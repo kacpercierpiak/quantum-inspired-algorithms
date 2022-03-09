@@ -7,7 +7,7 @@ namespace Quantum.Inspired.Algorithms
         private readonly double _Amin = 0.0;
         private readonly double _Amax = 0.0;
         private readonly int _precision = 0;
-        public readonly int m = 0;
+        private readonly int m = 0;
 
         public Fit(double Amin = 0.0, double Amax = 0.0, int precision = 0)
         {
@@ -17,6 +17,11 @@ namespace Quantum.Inspired.Algorithms
             var target = (Amax - Amin) * Math.Pow(10, precision) + 1;
             for (m = 0; Math.Pow(2, m) < target; m++) { }
 
+        }
+
+        public int GetSize()
+        {
+            return m;
         }
         public double Fitness(IGenotype genotype)
         {

@@ -9,6 +9,7 @@ namespace Quantum.Inspired.Algorithms.Core
     public interface IFitness
     {
         public double Fitness(IGenotype chromosome);
+        public int GetSize();
 
     }
 }
