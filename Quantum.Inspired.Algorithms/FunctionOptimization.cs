@@ -8,12 +8,14 @@ namespace Quantum.Inspired.Algorithms
     {
         private static List<(string Name, IFitness Fitness, double Target)> GenerateFitnessList()
         {
-            var result = new List<(string Name, IFitness Fitness, double Target)>();
-          //result.Add(new("Matyas function", new Fit(-10.0, 10.0, 2), 0.01));
-          //result.Add(new("HimmelblauFunc", new HimmelblauFunc(-5.0, 5.0, 2), 0.01));
-          //result.Add(new("EasomFunc", new EasomFunc(-20.0, 20.0, 2), -0.99));
-          //result.Add(new("SchafferFunc", new SchafferFunc(-100.0, 100.0, 2), 0.30));
-            result.Add(new("Schedule", new ScheduleFit(GenerateJobs(20),40),0));
+            var result = new List<(string Name, IFitness Fitness, double Target)>
+            {
+                new("Matyas function", new Fit(-10.0, 10.0, 2), 0.01),
+                new("HimmelblauFunc", new HimmelblauFunc(-5.0, 5.0, 2), 0.01),
+                new("EasomFunc", new EasomFunc(-20.0, 20.0, 2), -0.99),
+                new("SchafferFunc", new SchafferFunc(-100.0, 100.0, 2), 0.30),
+                new("Schedule", new ScheduleFit(GenerateJobs(20), 40), 0)
+            };
             return result;
         }
         private static List<(int value, int time)> GenerateJobs(int qty)
@@ -29,9 +31,11 @@ namespace Quantum.Inspired.Algorithms
 
         private static List<(string Name, IGeneticAlgorithm Algorithm)> GenerateAlgorithmList()
         {
-            var result = new List<(string Name, IGeneticAlgorithm Algorithm)>();
-            result.Add(new("Genetic Algorithm", new GeneticAlgorithm()));
-            result.Add(new("Quantum Genetic Algorithm", new QuantumGeneticAlgorithm()));
+            var result = new List<(string Name, IGeneticAlgorithm Algorithm)>
+            {
+                new("Genetic Algorithm", new GeneticAlgorithm()),
+                new("Quantum Genetic Algorithm", new QuantumGeneticAlgorithm())
+            };
             return result;
         }
         public static void Run()
@@ -43,8 +47,10 @@ namespace Quantum.Inspired.Algorithms
 
             foreach (var (Name, Algorithm) in algorithmList)
             {
-                List<(double value, int counter)> bestValue = new List<(double value, int counter)>();
-                bestValue.Add(new(Int32.MaxValue, 0));
+                List<(double value, int counter)> bestValue = new()
+                {
+                    new(Int32.MaxValue, 0)
+                };
                 Console.WriteLine($"*** {Name} ***");
                 foreach (var (fName, Fitness, Target) in fitnessList)
                 {
@@ -81,8 +87,8 @@ namespace Quantum.Inspired.Algorithms
                         Console.WriteLine(list.Max());
                         Console.WriteLine(list.Average());
                     }
-                    var b = bestValue.MinBy(x => x.value);
-                    Console.WriteLine($"{b.value} - {b.counter} - {bestValue.Average(x=>x.value)} - {bestValue.Average(x => x.counter)}");
+                    var (value, counter) = bestValue.MinBy(x => x.value);
+                    Console.WriteLine($"{value} - {counter} - {bestValue.Average(x=>x.value)} - {bestValue.Average(x => x.counter)}");
                 }
             }
         }

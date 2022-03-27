@@ -6,14 +6,12 @@ namespace Quantum.Inspired.Algorithms
     {
         private readonly double _Amin = 0.0;
         private readonly double _Amax = 0.0;
-        private readonly int _precision = 0;
         private readonly int m = 0;
 
         public Fit(double Amin = 0.0, double Amax = 0.0, int precision = 0)
         {
             _Amin = Amin;
             _Amax = Amax;
-            _precision = precision;
             var target = (Amax - Amin) * Math.Pow(10, precision) + 1;
             for (m = 0; Math.Pow(2, m) < target; m++) { }
 
@@ -26,7 +24,7 @@ namespace Quantum.Inspired.Algorithms
         public double Fitness(IGenotype genotype)
         {
             var gene = genotype.Observe();
-            var first = gene.Chromosome.Substring(0, gene.Chromosome.Length / 2);
+            var first = gene.Chromosome[..(gene.Chromosome.Length / 2)];
             var second = gene.Chromosome.Substring(gene.Chromosome.Length / 2, gene.Chromosome.Length / 2);
 
             var x = (double)_Amin + ((_Amax - _Amin) * (double)Convert.ToInt32(first, 2) / (Math.Pow(2, m) - 1));

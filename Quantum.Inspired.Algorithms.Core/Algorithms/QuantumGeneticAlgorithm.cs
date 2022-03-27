@@ -11,7 +11,7 @@ namespace Quantum.Inspired.Algorithms.Core.Algorithms
     {
         private int _populationSize { get; set; }
         private int _chromosomeLenght { get; set; }
-        private IFitness? _fitness { get; set; }
+        private IFitness _fitness { get; set; }
         private QGenotype? bestResult { get; set; }
         public List<QPopulation> Populations { get; private set; } = new List<QPopulation>();
 
@@ -27,12 +27,13 @@ namespace Quantum.Inspired.Algorithms.Core.Algorithms
             int chromosomeLenght,
             IFitness fitness)
         {
-            _populationSize = populationSize;
-            _chromosomeLenght = chromosomeLenght;
             Populations.Clear();
             Populations.Add(new QPopulation(populationSize, chromosomeLenght));
 
+            _populationSize = populationSize;
+            _chromosomeLenght = chromosomeLenght;
             _fitness = fitness;
+
             Populations[0].ObservePopulation();
             Populations[0].Individuals.ForEach(x => x.SetScore(_fitness.Fitness(x)));
             bestResult = Populations[0].Individuals.OrderBy(x => x.GetScore()).First();
