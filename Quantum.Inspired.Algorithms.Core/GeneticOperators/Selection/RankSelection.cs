@@ -38,7 +38,7 @@ namespace Quantum.Inspired.Algorithms.Core.GeneticOperators.Selection
         {
             Fitness(population);            
 
-            List<int> wheel = new List<int>();            
+            List<int> wheel = new();            
 
             for(int i = 0; i < population.Individuals.Count; i++)
             {                
@@ -49,7 +49,7 @@ namespace Quantum.Inspired.Algorithms.Core.GeneticOperators.Selection
 
             for (int i = 0; i < outputSize; i++)
             {
-                Random random = new Random();
+                Random random = new();
                 var id = random.Next(0, wheel.Count);
 
                 resultPopulation.Add(population.Individuals[wheel[id]].Clone());

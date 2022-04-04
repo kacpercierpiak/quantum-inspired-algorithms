@@ -25,7 +25,8 @@ namespace Quantum.Inspired.Algorithms.Core.Algorithms
         public void Init(
             int populationSize,
             int chromosomeLenght,
-            IFitness fitness)
+            IFitness fitness,
+            double mutation, double cross)
         {
             Populations.Clear();
             Populations.Add(new QPopulation(populationSize, chromosomeLenght));

@@ -39,22 +39,22 @@ namespace Quantum.Inspired.Algorithms.Core.GeneticOperators.Crossover
             var chromosomeLenght = population.Individuals.First().Chromosome.Length;
             pairs.ForEach(pair =>
             {
-                var item1Left = population.Individuals[pair.Item1].Chromosome.Substring(0, chromosomeLenght / 2);
+                var item1Left = population.Individuals[pair.Item1].Chromosome[..(chromosomeLenght / 2)];
                 var item1Right = population.Individuals[pair.Item2].Chromosome.Substring(chromosomeLenght / 2, chromosomeLenght / 2);
 
-                var item2Left = population.Individuals[pair.Item2].Chromosome.Substring(0, chromosomeLenght / 2);
+                var item2Left = population.Individuals[pair.Item2].Chromosome[..(chromosomeLenght / 2)];
                 var item2Right = population.Individuals[pair.Item2].Chromosome.Substring(chromosomeLenght / 2, chromosomeLenght / 2);
 
-                var leftResult = Cross(item1Left, item2Left);
+                var (Item1, Item2) = Cross(item1Left, item2Left);
                 var rightResult = Cross(item1Right, item2Right);
-                population.Individuals[pair.Item1].Chromosome = leftResult.Item1 + rightResult.Item1;
-                population.Individuals[pair.Item1].Chromosome = leftResult.Item1 + rightResult.Item2;
+                population.Individuals[pair.Item1].Chromosome = Item1 + rightResult.Item1;
+                population.Individuals[pair.Item1].Chromosome = Item1 + rightResult.Item2;
             });
         }
 
         public static List<(int, int)> CreatePairs(Population population)
         {
-            List<(int, int)> pairs = new List<(int, int)>();
+            List<(int, int)> pairs = new();
             Random random = new();
             var position = Enumerable.Range(0, population.Individuals.Count).ToList();
             for (int i = 0; i < population.Individuals.Count / 2; i++)

@@ -1,0 +1,1 @@
+Algorithm,Fitness,Population Size,Target,Mutation,CrossOver,Count,Min,Max,Avg,Best Value,Best Value Counter,Best Value Avg, Best Value Counter Avg

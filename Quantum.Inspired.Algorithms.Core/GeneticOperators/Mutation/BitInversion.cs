@@ -22,7 +22,7 @@ namespace Quantum.Inspired.Algorithms.Core.GeneticOperators.Mutation
             Random random = new();
             population.Individuals.ForEach(i =>
             {
-            StringBuilder sb = new StringBuilder(i.Chromosome);
+            StringBuilder sb = new(i.Chromosome);
             for (int j = 0; j < i.Chromosome.Length;j++)
                 {
                     if (random.NextDouble() <= _probability)

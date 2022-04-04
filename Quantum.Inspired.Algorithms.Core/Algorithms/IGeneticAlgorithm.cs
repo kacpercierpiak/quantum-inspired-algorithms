@@ -11,6 +11,6 @@ namespace Quantum.Inspired.Algorithms.Core.Algorithms
     {
         public void CreateNewPopulation();
         public double GetBestGlobalScore();
-        public void Init(int populationSize, int chromosomeLenght, IFitness fitness);
+        public void Init(int populationSize, int chromosomeLenght, IFitness fitness, double mutation, double cross);
     }
 }

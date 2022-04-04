@@ -23,5 +23,9 @@ namespace Quantum.Inspired.Algorithms.Core
                 Individuals = population.Individuals.Select(i => i.Clone()).ToList()
             };
         }
+
+        public static string ConvertToRBC(this string binary) => BinaryConverter.BinaryToRBC(binary);
+        public static string ConvertToBinary(this string rbc) => BinaryConverter.RBCtoBinary(rbc);
+
     }
 }

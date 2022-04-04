@@ -2,6 +2,7 @@
 using Quantum.Inspired.Algorithms.Core.GeneticOperators.Mutation;
 using Quantum.Inspired.Algorithms.Core.GeneticOperators.Selection;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,7 +18,7 @@ namespace Quantum.Inspired.Algorithms.Core.Algorithms
         private IGeneticOperators? _mutation { get; set; }
         private IGeneticOperators? _crossover { get; set; }
         private IFitness? _fitness { get; set; }
-        public List<Population> Populations { get; private set; } = new List<Population>();
+        public List<Population> Populations { get; private set; } = new();
 
         public double BestGlobalScore = 0.0;
 
@@ -29,8 +30,10 @@ namespace Quantum.Inspired.Algorithms.Core.Algorithms
 
         public void Init(
             int populationSize, 
-            int chromosomeLenght, 
-            IFitness fitness)
+            int chromosomeLenght,            
+            IFitness fitness,
+            double mutation = 0.15,
+            double cross = 0.7)
         {            
             _populationSize = populationSize;
             _chromosomeLenght = chromosomeLenght;
@@ -39,8 +42,8 @@ namespace Quantum.Inspired.Algorithms.Core.Algorithms
             _fitness = fitness;
             _selection = new RankSelection(_fitness);
             _selection.Fitness(Populations.First());
-            _mutation = new BitInversion();
-            _crossover = new SinglePoint();
+            _mutation = new BitInversion(mutation);
+            _crossover = new SinglePoint(cross);
             BestGlobalScore = Populations.Min(x => x.BestScore);
         }    
         
