@@ -15,5 +15,7 @@ namespace Quantum.Inspired.Algorithms.Core
         public double GetPi();
         public void SetScore(double value);
         public void SetPi(double value);
+        public double GetSelectionScore();
+        public double SetSelectionScore(double value);
     }
 }

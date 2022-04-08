@@ -7,6 +7,12 @@ namespace Quantum.Inspired.Algorithms
 {
     public class FunctionOptimization
     {
+        private (string Name, IGeneticAlgorithm Algorithm) algorithm { get; set; }
+
+        public FunctionOptimization((string Name, IGeneticAlgorithm Algorithm) algorithm)
+        {
+            this.algorithm = algorithm;
+        }
         private List<(string Name, IFitness Fitness, double Target)> GenerateFitnessList()
         {
             var result = new List<(string Name, IFitness Fitness, double Target)>
@@ -38,8 +44,9 @@ namespace Quantum.Inspired.Algorithms
         {
             var result = new List<(string Name, IGeneticAlgorithm Algorithm)>
             {
-                new("Genetic Algorithm", new GeneticAlgorithm()),
-                //new("Quantum Genetic Algorithm", new QuantumGeneticAlgorithm())
+                //new("Genetic Algorithm", new GeneticAlgorithm()),
+                new("Quantum Genetic Algorithm", new QuantumGeneticAlgorithm()),
+                new("Quantum Genetic Algorithm 2", new QuantumGeneticAlgorithm2())
             };
             return result;
         }
@@ -48,65 +55,68 @@ namespace Quantum.Inspired.Algorithms
             var fitnessList = GenerateFitnessList();
             var algorithmList = GenerateAlgorithmList();
 
-            StringBuilder result = new();        
-            foreach (var (Name, Algorithm) in algorithmList)
+            StringBuilder result = new();
+            var (Name, Algorithm) = algorithm;
+
+            foreach (var (fName, Fitness, Target) in fitnessList)
             {
-               
-                foreach (var (fName, Fitness, Target) in fitnessList)
+                List<(double value, int counter)> bestValue = new()
                 {
-                    List<(double value, int counter)> bestValue = new()
-                    {
-                        new(Int32.MaxValue, 0)
-                    };
-                    var size = Fitness.GetSize() * 2;
-                    if (fName == "Schedule")
-                        size = Fitness.GetSize();
+                    new(Int32.MaxValue, 0)
+                };
+                var size = Fitness.GetSize() * 2;
+                if (fName == "Schedule")
+                    size = Fitness.GetSize();
                    
-                    result.Append($"{Name},");
-                    result.Append($"{fName},");
-                    result.Append($"{populationSize},");
-                    result.Append($"{Target},");
+                result.Append($"{Name},");
+                result.Append($"{fName},");
+                result.Append($"{populationSize},");
+                result.Append($"{Target},");
 
-                    var count = 0;
-                    var list = new List<int>();
+                var count = 0;
+                var list = new List<int>();
                    
-                    result.Append($"{mutation},");
-                    result.Append($"{cross},");
-                    for (int j = 0; j < 100; j++)
+                result.Append($"{mutation},");
+                result.Append($"{cross},");
+                for (int j = 0; j < 100; j++)
+                {
+                    Algorithm.Init(populationSize, size, Fitness, mutation, cross);
+                    for (int i = 0; i < 200; i++)
                     {
-                        Algorithm.Init(populationSize, size, Fitness, mutation, cross);
-                        for (int i = 0; i < 200; i++)
+                        Algorithm.CreateNewPopulation();
+                        if (Algorithm.GetBestGlobalScore() <= Target)
                         {
-                            Algorithm.CreateNewPopulation();
-                            if (Algorithm.GetBestGlobalScore() <= Target)
-                            {
-                                count++;
-                                list.Add(i);
-                                break;
-                            }
-                            if (Algorithm.GetBestGlobalScore() < bestValue.Min().value)
-                            {
-                                bestValue.Add(new(Algorithm.GetBestGlobalScore(), i));
-                            }
+                            count++;
+                            list.Add(i);
+                            break;
                         }
-
+                        if (Algorithm.GetBestGlobalScore() < bestValue.Min().value)
+                        {
+                            bestValue.Add(new(Algorithm.GetBestGlobalScore(), i));
+                        }
                     }
-                    
-                    if (count > 0)
-                    {
-                        result.Append($"{count},");
-                        result.Append($"{list?.Min() ?? 0},");
-                        result.Append($"{list?.Max() ?? 0},");
-                        result.Append($"{list?.Average() ?? 0},");
-                    }
-                    else
-                        result.Append("-,-,-,-,");
 
-
-                    var (value, counter) = bestValue.MinBy(x => x.value);
-                    result.AppendLine($"{value}, {counter}, {bestValue.Average(x=>x.value)}, {bestValue.Average(x => x.counter)}");
                 }
+                    
+                if (count > 0)
+                {
+                    result.Append($"{count},");
+                    result.Append($"{list?.Min() ?? 0},");
+                    result.Append($"{list?.Max() ?? 0},");
+                    result.Append($"{list?.Average() ?? 0},");
+                }
+                else
+                    result.Append("-,-,-,-,");
+
+
+                var (value, counter) = bestValue.MinBy(x => x.value);
+                if(bestValue.Average(x => x.value)> bestValue.Average(x => x.counter))
+                        {
+                        var o = 0;
+                    }
+                result.AppendLine($"{value}, {counter}, {bestValue.Average(x=>x.value)}, {bestValue.Average(x => x.counter)}");
             }
+            
             return result.ToString();
         }
     }

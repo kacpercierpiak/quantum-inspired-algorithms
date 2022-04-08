@@ -12,6 +12,7 @@ namespace Quantum.Inspired.Algorithms.Core
         protected double _score { get; set; }
 
         protected double _pi { get; set; }
+        protected double _selectionScore { get; set; } = 0.0;
 
         public Genotype Clone()
         {
@@ -30,6 +31,8 @@ namespace Quantum.Inspired.Algorithms.Core
         public virtual Genotype Observe() => this;
 
         public double GetScore() => _score;
+        public double GetSelectionScore() => _selectionScore;
+        public double SetSelectionScore(double value) => _selectionScore = value;
 
         public double GetPi() => _pi;
 

@@ -37,22 +37,29 @@ namespace Quantum.Inspired.Algorithms.Core.GeneticOperators.Selection
         public void OperateOnPopulation(Population population, int outputSize)
         {
             Fitness(population);            
-
-            List<int> wheel = new();            
-
-            for(int i = 0; i < population.Individuals.Count; i++)
-            {                
-                wheel.AddRange(Enumerable.Repeat(i, (int)(population.Individuals[i].GetPi()*100)));
+            var tmp = population.Individuals.OrderBy(x => x.GetPi()).ToList();
+            var previous = 0.0;
+            for (int i = 0; i < tmp.Count; i++)
+            {
+                previous += tmp[i].GetPi();
+                tmp[i].SetSelectionScore(previous);
             }
-
+            var twe = tmp.Sum(x => x.GetPi());
+            
             var resultPopulation = new List<Genotype>();
 
             for (int i = 0; i < outputSize; i++)
             {
                 Random random = new();
-                var id = random.Next(0, wheel.Count);
-
-                resultPopulation.Add(population.Individuals[wheel[id]].Clone());
+                var rand = random.NextDouble();
+                foreach(var t in tmp)
+                {
+                    if(rand <= t.GetSelectionScore())
+                    {
+                        resultPopulation.Add(t.Clone());
+                        break;
+                    }
+                }                
             }
 
             population.Individuals = resultPopulation;

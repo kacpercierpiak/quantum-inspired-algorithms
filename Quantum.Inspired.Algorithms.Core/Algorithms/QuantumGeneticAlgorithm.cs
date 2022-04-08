@@ -13,6 +13,7 @@ namespace Quantum.Inspired.Algorithms.Core.Algorithms
         private int _chromosomeLenght { get; set; }
         private IFitness _fitness { get; set; }
         private QGenotype? bestResult { get; set; }
+        private Double _probability = Double.NaN;
         public List<QPopulation> Populations { get; private set; } = new List<QPopulation>();
 
         private double BestGlobalScore = 0.0;
@@ -34,7 +35,7 @@ namespace Quantum.Inspired.Algorithms.Core.Algorithms
             _populationSize = populationSize;
             _chromosomeLenght = chromosomeLenght;
             _fitness = fitness;
-
+            _probability = cross;
             Populations[0].ObservePopulation();
             Populations[0].Individuals.ForEach(x => x.SetScore(_fitness.Fitness(x)));
             bestResult = Populations[0].Individuals.OrderBy(x => x.GetScore()).First();
@@ -59,21 +60,19 @@ namespace Quantum.Inspired.Algorithms.Core.Algorithms
             foreach (var individual in population.Individuals)
             {
                 var best = bestResult?.GetScore();
-                var newIsbetter = individual.GetScore() >= best;
-                               
+                var newIsbetter = individual.GetScore() >= best;          
                 for (int j=0; j < individual.Chromosome.Classical.Length;j++)
                 {
                     char x = individual.Chromosome.Classical[j];
                     char b = bestResult.Chromosome.Classical[j];
                     var delta = lookup[x == '1' ? 1 : 0, b == '1' ? 1 : 0, newIsbetter ? 1 : 0];
                     double angle = individual.Chromosome.Quantum[j] % Math.PI;
-                    int index = (angle > double.Epsilon) && angle < ((Math.PI/4) - double.Epsilon) ? 0 :
+                    int index = (angle > double.Epsilon) && angle < ((Math.PI / 4) - double.Epsilon) ? 0 :
                         (angle > (Math.PI - double.Epsilon)) && angle < ((Math.PI / 2) + double.Epsilon) ? 1 :
-                       (Math.Abs(((Math.PI/2 + individual.Chromosome.Quantum[j]) % Math.PI) - Math.PI/2) < double.Epsilon) ? 2 : 3;
+                        (Math.Abs(((Math.PI / 2 + individual.Chromosome.Quantum[j]) % Math.PI) - Math.PI / 2) < double.Epsilon) ? 2 : 3;
 
                     double sign = signs_table[x == '1' ? 1 : 0, b == '1' ? 1 : 0, newIsbetter ? 1 : 0, index];
-                    individual.Chromosome.Quantum[j] += delta * sign;
-                    
+                    individual.Chromosome.Quantum[j] += delta * sign;    
                 }
                 individual.SetScore(_fitness.Fitness(individual));
 

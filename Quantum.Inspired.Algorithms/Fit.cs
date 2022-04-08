@@ -24,13 +24,14 @@ namespace Quantum.Inspired.Algorithms
         public double Fitness(IGenotype genotype)
         {
             var gene = genotype.Observe();
-            var first = gene.Chromosome[..(gene.Chromosome.Length / 2)];
-            var second = gene.Chromosome.Substring(gene.Chromosome.Length / 2, gene.Chromosome.Length / 2);
+            var (first, second) = SplitChromosome(gene.Chromosome);         
 
             var x = (double)_Amin + ((_Amax - _Amin) * (double)Convert.ToInt32(first, 2) / (Math.Pow(2, m) - 1));
             var y = (double)_Amin + ((_Amax - _Amin) * (double)Convert.ToInt32(second, 2) / (Math.Pow(2, m) - 1));
             return Function(x, y);
         }
+
+        protected virtual (string first, string second) SplitChromosome(string chromosome) => new(chromosome[..(chromosome.Length / 2)], chromosome[(chromosome.Length / 2)..]);
 
         protected virtual double Function(double x, double y)
         {

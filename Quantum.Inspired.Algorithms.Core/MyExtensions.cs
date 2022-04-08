@@ -24,6 +24,14 @@ namespace Quantum.Inspired.Algorithms.Core
             };
         }
 
+        public static Q2Population Clone(this Q2Population population)
+        {
+            return new Q2Population()
+            {
+                Individuals = population.Individuals.Select(i => i.Clone()).ToList()
+            };
+        }
+
         public static string ConvertToRBC(this string binary) => BinaryConverter.BinaryToRBC(binary);
         public static string ConvertToBinary(this string rbc) => BinaryConverter.RBCtoBinary(rbc);
 
