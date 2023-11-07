@@ -1,4 +1,4 @@
-﻿using Quantum.Inspired.Algorithms.Core.GeneticOperators.Selection;
+using Quantum.Inspired.Algorithms.Core.GeneticOperators.Selection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +38,7 @@ namespace Quantum.Inspired.Algorithms.Core.Algorithms
             _probability = cross;
             Populations[0].ObservePopulation();
             Populations[0].Individuals.ForEach(x => x.SetScore(_fitness.Fitness(x)));
-            bestResult = Populations[0].Individuals.OrderBy(x => x.GetScore()).First();
+            bestResult = Populations[0].Individuals.MinBy(x => x.GetScore());
             
             BestGlobalScore = Populations.Min(x => x.BestScore);
         }
@@ -49,7 +49,7 @@ namespace Quantum.Inspired.Algorithms.Core.Algorithms
             var currentPopulation = Populations.First().Clone();
             currentPopulation.Individuals.ForEach(x=> x.SetScore(_fitness.Fitness(x)));
             Update(currentPopulation);           
-            bestResult = currentPopulation.Individuals.OrderBy(x => x.GetScore()).First();            
+            bestResult = currentPopulation.Individuals.MinBy(x => x.GetScore());            
 
             Populations.Add(currentPopulation);
             BestGlobalScore = Populations.Min(x => x.BestScore);
